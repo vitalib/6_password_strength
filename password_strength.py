@@ -1,14 +1,12 @@
 import argparse
+import getpass
 import passwordmeter
 
 
-def print_password_strength(password, verbose):
-    password_strength, suggestions = passwordmeter.test(password)
-    print("Strength of password '{}' is {:d}".format(
-                                            password,
-                                            int(password_strength * 10),
-                                                     )
-          )
+def print_password_strength(password_strength, verbose):
+    password_grade, suggestions = password_strength
+    password_grade = int(password_grade * 10)
+    print("Strength of password is {:d}".format(password_grade))
     if verbose:
         if suggestions.values():
             print("Suggestions:")
@@ -20,7 +18,6 @@ def print_password_strength(password, verbose):
 
 def get_arguments():
     parser = argparse.ArgumentParser()
-    parser.add_argument('password', help='Password to be evaluated')
     parser.add_argument('-v', '--verbose', action='store_true',
                         help='Prints suggestions for password.'
                         )
@@ -30,4 +27,6 @@ def get_arguments():
 
 if __name__ == '__main__':
     args = get_arguments()
-    print_password_strength(args.password, args.verbose)
+    password = getpass.getpass()
+    password_strength = passwordmeter.test(password)
+    print_password_strength(password_strength, args.verbose)
